@@ -10,11 +10,9 @@ import (
 	"io"
 	"log"
 	"os"
-)
 
-type kernel struct {
-	K [][]int
-}
+	knl "kernelizer/kernelate"
+)
 
 func main() {
 	imageName, kernelName, err := handleFlags()
@@ -23,16 +21,16 @@ func main() {
 		log.Fatalln(err.Error())
 	}
 
-	_, err = getImageData(imageName)
+	img, err := getImageData(imageName)
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
+	_ = img.(*image.RGBA)
 
 	_, err = getKernalData(kernelName)
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
-
 }
 
 // Returns the reader for the image and the image for the kernel json in that order
@@ -64,8 +62,8 @@ func getImageData(imageName string) (image.Image, error) {
 	return img, err
 }
 
-func getKernalData(kernelName string) (*kernel, error) {
-	var k kernel
+func getKernalData(kernelName string) (*knl.Kernel, error) {
+	var k knl.Kernel
 
 	kernelFile, err := os.Open(kernelName)
 	if err != nil {
